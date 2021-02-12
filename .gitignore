@@ -1,0 +1,17 @@
+*.deps
+*.dirstamp
+*.o
+*~
+/aclocal.m4
+/autom4te.cache
+/build-aux
+/config.h
+/config.h.in
+/config.log
+/config.status
+/configure
+/Makefile
+/Makefile.in
+/src/gastoold
+/stamp-h1
+TAGS
