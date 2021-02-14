@@ -22,7 +22,7 @@ AC_INIT([Gastool], [0.1], [https://github.com/guitos/gastool/issues/],
 AC_CONFIG_SRCDIR([src/gastoold.c])
 
 AC_CONFIG_AUX_DIR([build-aux])
-AC_CONFIG_HEADERS([config.h])
+AC_CONFIG_HEADERS([include/config.h])
 
 AM_INIT_AUTOMAKE([foreign subdir-objects])
 

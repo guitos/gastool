@@ -5,13 +5,14 @@
 /aclocal.m4
 /autom4te.cache
 /build-aux
-/config.h
-/config.h.in
 /config.log
 /config.status
 /configure
+/include/config.h
+/include/config.h.in
+/include/configmake.h
+/include/stamp-h1
 /Makefile
 /Makefile.in
 /src/gastoold
-/stamp-h1
 TAGS

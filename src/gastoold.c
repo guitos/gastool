@@ -22,6 +22,7 @@
 #include <limits.h>
 
 #include "log.h"
+#include "cfgfile.h"
 
 #define PROGRAM_AUTHOR \
     "Guilherme de A. Suckevicz"
@@ -29,6 +30,9 @@
 /* String containing name the program is called with.
    To be initialized by main(). */
 static const char *program_name = NULL;
+
+/* Configuration file pathname. */
+static const char *configfile = NULL;
 
 /* For long options that have no equivalent short option, use a
    non-character as a pseudo short option, starting with CHAR_MAX + 1. */
@@ -38,6 +42,7 @@ enum {
 };
 
 static struct option const long_options[] = {
+    {"config", required_argument, NULL, 'c'},
     {"debug", no_argument, NULL, 'd'},
     {"help", no_argument, NULL, HELP_OPTION},
     {"version", no_argument, NULL, VERSION_OPTION},
@@ -53,7 +58,8 @@ static void usage(int status)
         printf("Usage: %s [OPTION]...\n", program_name);
 
         fputs("\n\
-  -d, --debug    enable debug mode\n\
+  -c, --config=FILE  specify config file to use\n\
+  -d, --debug        enable debug mode\n\
       --help     display this help and exit\n\
       --version  output version information and exit\n", stdout);
 
@@ -90,9 +96,13 @@ int main(int argc, char **argv)
 
     program_name = argv[0];
 
-    while ((optc = getopt_long(argc, argv, "d", long_options, NULL))
+    while ((optc = getopt_long(argc, argv, "c:d", long_options, NULL))
            != -1) {
         switch (optc) {
+        case 'c':
+            configfile = optarg;
+            break;
+
         case 'd':
             log_set_default_level(LOG_DEBUG);
             break;
@@ -111,6 +121,8 @@ int main(int argc, char **argv)
     }
 
     log_print(LOG_DEBUG, "%s version %s", program_name, PACKAGE_VERSION);
+
+    read_config(configfile);
 
     exit(EXIT_SUCCESS);
 }

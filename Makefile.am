@@ -15,11 +15,11 @@
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
 # Additional files to distribute.
-EXTRA_DIST =  \
+EXTRA_DIST =	\
   bootstrap
 
-# Gastool.
-include $(top_srcdir)/src/local.mk
+BUILT_SOURCES =
+CLEANFILES =
 
-# Headers.
 include $(top_srcdir)/include/local.mk
+include $(top_srcdir)/src/local.mk

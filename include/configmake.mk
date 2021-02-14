@@ -1,4 +1,4 @@
-# Make Gastool programs.
+# Generate configmake header file.
 # Copyright (C) 2020 Guilherme de Almeida Suckevicz.
 
 # This program is free software: you can redistribute it and/or modify
@@ -14,11 +14,12 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-bin_PROGRAMS = src/gastoold
+include/configmake.h: Makefile
+	$(AM_V_GEN)rm -f $@-t && \
+	{ echo '#define PREFIX "$(prefix)"'; \
+	  echo '#define SYSCONFDIR "$(sysconfdir)"'; \
+	} | sed '/""/d' > $@-t && \
+	mv -f $@-t $@
 
-src_gastoold_CPPFLAGS = -I$(top_srcdir)/include
-
-src_gastoold_SOURCES =	\
-  src/gastoold.c	\
-  src/log.c		\
-  src/cfgfile.c
+BUILT_SOURCES += include/configmake.h
+CLEANFILES += include/configmake.h include/configmake.h-t

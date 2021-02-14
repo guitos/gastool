@@ -14,5 +14,11 @@
 # You should have received a copy of the GNU General Public License
 # along with this program.  If not, see <https://www.gnu.org/licenses/>.
 
-pkginclude_HEADERS =  \
-  include/log.h
+# Generate configmake header file.
+include include/configmake.mk
+
+pkginclude_HEADERS =	\
+  include/configmake.h	\
+  include/log.h		\
+  include/cfgfile.h	\
+  include/cfgtree.h
