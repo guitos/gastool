@@ -14,13 +14,27 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#ifndef _GASTOOL_LOG_H
-#define _GASTOOL_LOG_H
+#include <config.h>
 
-#include <syslog.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
-void log_print(int level, int errnum, const char *format, ...);
+#include "common.h"
 
-int log_set_default_level(int level);
+char *gas_strerror(int errnum, char *buf, size_t buflen)
+{
+    int result;
 
-#endif
+    *buf = '\0';
+
+    if (errnum < 0)
+        errnum = abs(errnum);
+
+    result = strerror_r(errnum, buf, buflen);
+
+    if (result != 0)
+        snprintf(buf, buflen, "Unknown error %d", errnum);
+
+    return buf;
+}

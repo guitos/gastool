@@ -17,32 +17,60 @@
 #include <config.h>
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <stdarg.h>
 #include <errno.h>
 
+#include "common.h"
 #include "log.h"
 
 /* Default log level. */
 static int default_log_level = LOG_INFO;
 
-static void log_write(int level, const char *format, va_list args)
+static void log_write(int level, const char *message)
 {
     if (level > default_log_level)
         return;
 
     /* Write only to stderr for now. */
-    vfprintf(stderr, format, args);
-    fputc('\n', stderr);
+    fprintf(stderr, "%s\n", message);
 
     fflush(stderr);
 }
 
-void log_print(int level, const char *format, ...)
+static void log_print_internal(int level, int errnum, const char *format,
+                               va_list args)
+{
+    char *logbuf;
+    size_t size;
+    FILE *stream;
+
+    stream = open_memstream(&logbuf, &size);
+    if (stream == NULL)
+        return;
+
+    vfprintf(stream, format, args);
+
+    if (errnum) {
+        char errbuf[ERRBUF_LEN_MAX];
+
+        gas_strerror(errnum, errbuf, sizeof(errbuf));
+        fprintf(stream, ": %s", errbuf);
+    }
+
+    fclose(stream);
+
+    log_write(level, logbuf);
+
+    free(logbuf);
+}
+
+void log_print(int level, int errnum, const char *format, ...)
 {
     va_list args;
 
     va_start(args, format);
-    log_write(level, format, args);
+    log_print_internal(level, errnum, format, args);
     va_end(args);
 }
 
@@ -50,9 +78,9 @@ int log_set_default_level(int level)
 {
     if (0 > level || level > LOG_PRIMASK) {
         errno = EINVAL;
-        return -1;
+        return -GAS_FAILURE;
     }
 
     default_log_level = level;
-    return 0;
+    return GAS_SUCCESS;
 }

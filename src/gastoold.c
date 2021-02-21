@@ -120,7 +120,7 @@ int main(int argc, char **argv)
         }
     }
 
-    log_print(LOG_DEBUG, "%s version %s", program_name, PACKAGE_VERSION);
+    log_print(LOG_DEBUG, 0, "%s version %s", program_name, PACKAGE_VERSION);
 
     read_config(configfile);
 

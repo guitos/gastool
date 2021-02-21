@@ -20,5 +20,6 @@ src_gastoold_CPPFLAGS = -I$(top_srcdir)/include
 
 src_gastoold_SOURCES =	\
   src/gastoold.c	\
+  src/common.c		\
   src/log.c		\
   src/cfgfile.c

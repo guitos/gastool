@@ -17,8 +17,10 @@
 #include <config.h>
 
 #include <stdlib.h>
+#include <errno.h>
 
 #include "configmake.h"
+#include "log.h"
 #include "cfgtree.h"
 #include "cfgfile.h"
 
@@ -30,4 +32,6 @@ void read_config(const char *configfile)
 
     if (!configfile)
         configfile = DEFAULT_CONFIG_FILE;
+
+    log_print(LOG_CRIT, ENOSYS, "read_config()");
 }

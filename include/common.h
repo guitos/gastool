@@ -14,13 +14,17 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#ifndef _GASTOOL_LOG_H
-#define _GASTOOL_LOG_H
+#ifndef _GASTOOL_COMMON_H
+#define _GASTOOL_COMMON_H
 
-#include <syslog.h>
+/* Function return values that can be used to indicate success or failure.
+   Note that GAS_FAILURE is not negative. */
 
-void log_print(int level, int errnum, const char *format, ...);
+#define GAS_SUCCESS 0           /* Successful return status. */
+#define GAS_FAILURE 1           /* Failing return status. */
 
-int log_set_default_level(int level);
+#define ERRBUF_LEN_MAX 256
+
+char *gas_strerror(int errnum, char *buf, size_t buflen);
 
 #endif
