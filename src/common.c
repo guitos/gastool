@@ -20,7 +20,38 @@
 #include <stdlib.h>
 #include <string.h>
 
+#include "log.h"
 #include "common.h"
+
+static void gas_alloc_die(void)
+{
+    log_print(LOG_CRIT, 0, "memory exhausted");
+    exit(EXIT_FAILURE);
+}
+
+void *gas_malloc(size_t n)
+{
+    void *p = malloc(n);
+    if (!p)
+        gas_alloc_die();
+    return p;
+}
+
+void *gas_realloc(void *p, size_t n)
+{
+    void *r = realloc(p, n);
+    if (!r && n)
+        gas_alloc_die();
+    return r;
+}
+
+char *gas_strdup(const char *string)
+{
+    char *s = strdup(string);
+    if (!s)
+        gas_alloc_die();
+    return s;
+}
 
 char *gas_strerror(int errnum, char *buf, size_t buflen)
 {

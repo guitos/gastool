@@ -23,6 +23,12 @@
 #define GAS_SUCCESS 0           /* Successful return status. */
 #define GAS_FAILURE 1           /* Failing return status. */
 
+void *gas_malloc(size_t n);
+
+void *gas_realloc(void *p, size_t n);
+
+char *gas_strdup(const char *string);
+
 #define ERRBUF_LEN_MAX 256
 
 char *gas_strerror(int errnum, char *buf, size_t buflen);
