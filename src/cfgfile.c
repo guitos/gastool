@@ -18,6 +18,8 @@
 
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
 #include <errno.h>
 
 #include <sys/stat.h>
@@ -68,6 +70,87 @@ static int open_config_file(const char *filename, FILE **stream)
     return GAS_SUCCESS;
 }
 
+static int read_config_line(char **buf, size_t *bufsize, FILE *fp)
+{
+    char *linep, *cp;
+    ssize_t len;
+
+    if (feof(fp))
+        return 0;
+
+    len = getdelim(buf, bufsize, '\n', fp);
+    if (len < 0)
+        return -errno;
+
+    linep = *buf;
+
+    /* Strip trailing newline characters. */
+    while (len > 0
+           && (linep[len - 1] == '\n' || linep[len - 1] == '\r'))
+        len--;
+    linep[len] = '\0';
+
+    /* Strip trailing whitespace. */
+    while (len > 0 && isblank((unsigned char)linep[len - 1]))
+        len--;
+    linep[len] = '\0';
+
+    /* Strip leading whitespace. */
+    for (cp = linep; isblank((unsigned char)*cp); cp++)
+        len--;
+    memmove(linep, cp, len);
+    linep[len] = '\0';
+
+    return 1;
+}
+
+static int parse_config_line(const char *filename, char *line, int linenum,
+                             directive_t **current, directive_t **curr_parent)
+{
+    /* Skip comments and empty lines. */
+    if (*line == '#' || *line == '\0')
+        return GAS_SUCCESS;
+
+    log_print(LOG_DEBUG, 0, "%d:'%s'", linenum, line);
+
+    return GAS_SUCCESS;
+}
+
+static int parse_config_file(const char *filename, FILE *fp,
+                             directive_t **conftree)
+{
+    char *line = NULL;
+    size_t linesize = 0;
+    int linenum = 0;
+    directive_t *current = *conftree;
+    directive_t *curr_parent = NULL;
+    int result_read = 0, result_parser = 0;
+
+    while ((result_read = read_config_line(&line, &linesize, fp)) > 0) {
+        /* Increment line number. */
+        linenum++;
+
+        result_parser = parse_config_line(filename, line, linenum, &current,
+                                          &curr_parent);
+        if (result_parser < 0)
+            break;
+    }
+
+    free(line);
+
+    if (result_read < 0) {
+        log_print(LOG_ERR, result_read, "error reading '%s' at line %d",
+                  filename, linenum);
+    }
+
+    if (result_parser < 0) {
+        log_print(LOG_ERR, 0, "syntax error in file '%s' at line %d",
+                  filename, linenum);
+    }
+
+    return (result_read < 0 || result_parser < 0) ? -GAS_FAILURE : GAS_SUCCESS;
+}
+
 static int read_config_file(const char *filename, directive_t **conftree)
 {
     int result;
@@ -77,7 +160,13 @@ static int read_config_file(const char *filename, directive_t **conftree)
     if (result < 0)
         return -GAS_FAILURE;
 
+    /* Parse the configuration file and build the tree. */
+    result = parse_config_file(filename, fp, conftree);
+
     fclose(fp);
+
+    if (result < 0)
+        return -GAS_FAILURE;
 
     return GAS_SUCCESS;
 }
