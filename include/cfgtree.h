@@ -18,11 +18,26 @@
 #define _GASTOOL_CFGTREE_H
 
 struct directive_t {
-    /* The current directive. */
-    const char *directive;
+    /* The current directive name. */
+    char *directive;
+
+    /* The arguments of this directive. */
+    int argc;
+    char **argv;
+
+    /* The filename this directive was found. */
+    char *filename;
+    /* The line number this directive was found. */
+    int linenum;
 
     /* The next directive node in the tree. */
     struct directive_t *next;
+
+    /* The parent node of this directive. */
+    struct directive_t *parent;
+
+    /* The child node of this directive. */
+    struct directive_t *child;
 };
 
 typedef struct directive_t directive_t;
