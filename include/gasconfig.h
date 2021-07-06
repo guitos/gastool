@@ -20,4 +20,9 @@
 #include "configauto.h"
 #include "configmake.h"
 
+/* Simple __attribute__() checking. */
+#if !defined(__GNUC__) && !defined(__clang__)
+# define __attribute__(x)
+#endif
+
 #endif  /* !_GASCONFIG_H */

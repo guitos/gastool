@@ -19,7 +19,8 @@
 
 #include <syslog.h>
 
-void log_print(int level, int errnum, const char *format, ...);
+void log_print(int level, int errnum, const char *format, ...)
+    __attribute__((format(printf, 3, 4)));
 
 int log_set_default_level(int level);
 
