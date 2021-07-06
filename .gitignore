@@ -8,11 +8,15 @@
 /config.log
 /config.status
 /configure
-/include/config.h
-/include/config.h.in
+/include/configauto.h
+/include/configauto.h.in
 /include/configmake.h
 /include/stamp-h1
 /Makefile
 /Makefile.in
 /src/gastoold
 TAGS
+
+# Local variables:
+# sort-fold-case t
+# End:

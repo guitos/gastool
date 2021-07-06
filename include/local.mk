@@ -18,6 +18,7 @@
 include include/configmake.mk
 
 pkginclude_HEADERS =	\
+  include/gasconfig.h	\
   include/configmake.h	\
   include/common.h	\
   include/log.h		\
