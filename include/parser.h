@@ -14,30 +14,13 @@
    You should have received a copy of the GNU General Public License
    along with this program.  If not, see <https://www.gnu.org/licenses/>. */
 
-#include "gasconfig.h"
-
-#include <stdlib.h>
+#ifndef _GASTOOL_PARSER_H
+#define _GASTOOL_PARSER_H
 
 #include "cfgtree.h"
-#include "parser.h"
-#include "cfgfile.h"
 
-#define DEFAULT_CONFIG_FILE SYSCONFDIR "/gastoold.conf"
+int read_config_file(const char *filename, directive_t **conftree);
 
-void read_config(const char *configfile)
-{
-    int result;
-    directive_t *conftree = NULL;
+void free_conf_tree(directive_t *current);
 
-    if (!configfile)
-        configfile = DEFAULT_CONFIG_FILE;
-
-    result = read_config_file(configfile, &conftree);
-    if (result < 0) {
-        /* Failed to parse the configuration file.
-           The cause should have already been logged. */
-        exit(EXIT_FAILURE);
-    }
-
-    free_conf_tree(conftree);
-}
+#endif  /* !_GASTOOL_PARSER_H */

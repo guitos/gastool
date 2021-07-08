@@ -22,5 +22,6 @@ pkginclude_HEADERS =	\
   include/configmake.h	\
   include/common.h	\
   include/log.h		\
-  include/cfgfile.h	\
-  include/cfgtree.h
+  include/cfgtree.h	\
+  include/parser.h	\
+  include/cfgfile.h

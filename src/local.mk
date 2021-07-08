@@ -22,4 +22,5 @@ src_gastoold_SOURCES =	\
   src/gastoold.c	\
   src/common.c		\
   src/log.c		\
+  src/parser.c		\
   src/cfgfile.c
